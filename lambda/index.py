@@ -2,7 +2,7 @@
 import json
 import os
 import boto3
-import urlib.request
+import urllib.request
 import re  # 正規表現モジュールをインポート
 from botocore.exceptions import ClientError
 
@@ -20,7 +20,7 @@ bedrock_client = None
 
 # モデルID
 #MODEL_ID = os.environ.get("MODEL_ID", "us.amazon.nova-lite-v1:0")
-MODEL_ID = "https://9930-35-194-79-91.ngrok-free.app"
+MODEL_ID = "https://02b2-35-194-79-91.ngrok-free.app"
 
 
 def lambda_handler(event, context):
