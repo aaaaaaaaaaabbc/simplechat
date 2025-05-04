@@ -74,7 +74,7 @@ def lambda_handler(event, context):
         
         # invoke_model用のリクエストペイロード
         request_payload = {
-                "prompt": "string",
+                "prompt": bedrock_messages.__str__(),
                 "max_new_tokens": 512,
                 "do_sample": True,
                 "temperature": 0.7,
@@ -102,12 +102,9 @@ def lambda_handler(event, context):
             response_body = json.loads(response.read().decode('utf-8'))
         print("Bedrock response:", json.dumps(response_body, default=str))
         
-        # 応答の検証
-        if not response_body.get('output') or not response_body['output'].get('message') or not response_body['output']['message'].get('content'):
-            raise Exception("No response content from the model")
         
         # アシスタントの応答を取得
-        assistant_response = response_body['output']['message']['content'][0]['text']
+        assistant_response = response_body["generated_text"]
         
         # アシスタントの応答を会話履歴に追加
         messages.append({
