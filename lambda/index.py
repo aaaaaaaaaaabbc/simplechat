@@ -81,11 +81,9 @@ def lambda_handler(event, context):
                 "top_p": 0.9
         }
 
-        responses = {
-            {
+        response = {
                 "generated_text": "string",
                 "response_time": 0
-            }
         }
         
         print("Calling Bedrock invoke_model API with payload:", json.dumps(request_payload))
