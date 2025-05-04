@@ -92,7 +92,7 @@ def lambda_handler(event, context):
         
         # invoke_model APIを呼び出し
         url = f"{MODEL_ID}/generate" 
-        with urlib.request.urlopen(url,data = json.dumps(request_payload).encode('utf-8')) as response:
+        with urllib.request.urlopen(url,data = json.dumps(request_payload).encode('utf-8')) as response:
             response_body = json.loads(response.read().decode('utf-8'))
         print("Bedrock response:", json.dumps(response_body, default=str))
         
