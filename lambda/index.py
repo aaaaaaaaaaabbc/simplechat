@@ -85,12 +85,19 @@ def lambda_handler(event, context):
                 "generated_text": "string",
                 "response_time": 0
         }
+
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(request_payload).encode('utf-8'),
+            headers={'Content-Type': 'application/json'},
+            method='POST'
+)
         
         print("Calling Bedrock invoke_model API with payload:", json.dumps(request_payload))
         
         # invoke_model APIを呼び出し
         url = f"{MODEL_ID}/generate" 
-        with urllib.request.urlopen(url,data = json.dumps(request_payload).encode('utf-8')) as response:
+        with urllib.request.urlopen(req) as response:
             response_body = json.loads(response.read().decode('utf-8'))
         print("Bedrock response:", json.dumps(response_body, default=str))
         
