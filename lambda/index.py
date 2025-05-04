@@ -2,6 +2,7 @@
 import json
 import os
 import boto3
+import urlib.request
 import re  # 正規表現モジュールをインポート
 from botocore.exceptions import ClientError
 
@@ -18,8 +19,12 @@ def extract_region_from_arn(arn):
 bedrock_client = None
 
 # モデルID
-MODEL_ID = os.environ.get("MODEL_ID", "us.amazon.nova-lite-v1:0")
+#MODEL_ID = os.environ.get("MODEL_ID", "us.amazon.nova-lite-v1:0")
+MODEL_ID = "https://f1d2-35-194-79-91.ngrok-free.app"
 
+url = f"{MODEL_ID}/generate" 
+with urlib.request.urlopen(url,data = json.dumps(request_payload).encode('utf-8')) as response:
+    response_body = json.loads(response.read().decode('utf-8'))
 def lambda_handler(event, context):
     try:
         # コンテキストから実行リージョンを取得し、クライアントを初期化
@@ -71,26 +76,21 @@ def lambda_handler(event, context):
         
         # invoke_model用のリクエストペイロード
         request_payload = {
-            "messages": bedrock_messages,
-            "inferenceConfig": {
-                "maxTokens": 512,
-                "stopSequences": [],
+            {
+                "prompt": "string",
+                "max_new_tokens": 512,
+                "do_sample": true,
                 "temperature": 0.7,
-                "topP": 0.9
+                "top_p": 0.9
             }
         }
         
         print("Calling Bedrock invoke_model API with payload:", json.dumps(request_payload))
         
         # invoke_model APIを呼び出し
-        response = bedrock_client.invoke_model(
-            modelId=MODEL_ID,
-            body=json.dumps(request_payload),
-            contentType="application/json"
-        )
-        
-        # レスポンスを解析
-        response_body = json.loads(response['body'].read())
+        url = f"{MODEL_ID}/generate" 
+        with urlib.request.urlopen(url,data = json.dumps(request_payload).encode('utf-8')) as response:
+            response_body = json.loads(response.read().decode('utf-8'))
         print("Bedrock response:", json.dumps(response_body, default=str))
         
         # 応答の検証
